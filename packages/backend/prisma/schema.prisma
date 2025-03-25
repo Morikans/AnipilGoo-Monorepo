@@ -13,6 +13,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// TODO スネークケースの方がいいかも
+
 model Article {
   id          Int      @id @default(autoincrement())
   title       String   // 記事タイトル
@@ -30,4 +32,11 @@ model Tag {
   id        Int       @id @default(autoincrement()) // 自動採番のID
   name      String    @unique // タグ名（重複不可）
   articles  Article[] @relation("articleTags") // 関連する記事(多対多)
+}
+
+model User {
+  id         String   @id @default(uuid())
+  email      String   @unique
+  name       String?
+  createdAt  DateTime @default(now())
 }
