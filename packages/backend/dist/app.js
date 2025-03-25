@@ -14,7 +14,7 @@ const corsOptions = {
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)(corsOptions));
 app.use(express_1.default.json());
-// app.use("/auth", authRoutes);
+app.use("/auth", routes_1.authRoutes);
 // app.use("/user", userDataRoutes);
 app.use("/article", routes_1.articleRoutes);
 exports.default = app;

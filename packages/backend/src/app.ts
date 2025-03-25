@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import { articleRoutes } from "./routes";
+import { articleRoutes, authRoutes } from "./routes";
 
 dotenv.config();
 
@@ -13,7 +13,7 @@ const app = express();
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// app.use("/auth", authRoutes);
+app.use("/auth", authRoutes);
 // app.use("/user", userDataRoutes);
 app.use("/article", articleRoutes);
 
