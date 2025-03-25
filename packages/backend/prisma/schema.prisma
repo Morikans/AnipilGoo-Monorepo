@@ -13,20 +13,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        Int @id @default(autoincrement())
-  email     String @unique
-  password  String
-  name      String @default("")
-  createdAt DateTime @default(now())
-  refreshTokens  RefreshToken[]
-}
-
 model Article {
   id          Int      @id @default(autoincrement())
   title       String   // 記事タイトル
   content     String   // 記事本文
-  imageURL    String?
+  imageURLs   String[]
   clickCount  Int      @default(0) // 記事クリック数
   createdAt   DateTime  @default(now()) // 作成日
   updatedAt   DateTime  @updatedAt      // 更新日
@@ -39,13 +30,4 @@ model Tag {
   id        Int       @id @default(autoincrement()) // 自動採番のID
   name      String    @unique // タグ名（重複不可）
   articles  Article[] @relation("articleTags") // 関連する記事(多対多)
-}
-
-model RefreshToken {
-  id        Int      @id @default(autoincrement())
-  token     String   @unique
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-  expiresAt DateTime
 }

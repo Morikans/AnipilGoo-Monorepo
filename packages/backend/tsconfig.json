@@ -1,19 +1,20 @@
 {
-    "compilerOptions": {
-        "baseUrl": "./src", // srcディレクトリをベースにする
-        "paths": {
-            "*": ["*"]
-        },
-        "moduleResolution": "node",
-        "module": "commonjs",
-        "esModuleInterop": true,
-        "target": "ES6",
-        "outDir": "./dist"
+  "compilerOptions": {
+    "baseUrl": "./src", // srcディレクトリをベースにする
+    "paths": {
+      "*": ["*"]
     },
-    "include": ["src/**/*"],
-    "exclude": ["node_modules"],
-    "typedocOptions": {
-        "entryPoints": ["./src"],
-        "out": "docs"
-    }
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "ES6",
+    "outDir": "./dist",
+    "typeRoots": ["./node_modules/@types", "./types"] // カスタム型定義のルートを追加
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"],
+  "typedocOptions": {
+    "entryPoints": ["./src"],
+    "out": "docs"
+  }
 }

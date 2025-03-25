@@ -1,46 +1,65 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import { bucket } from "../../utils/storageConfig"; // GCS設定をインポート
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { v4 as uuidv4 } from "uuid"; // ランダムなファイル名生成に使用
 
 const prisma = new PrismaClient();
 
+// S3クライアントの初期化
+const s3Client = new S3Client({
+  region: process.env.AWS_REGION, // e.g., "us-east-1"
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+  },
+});
+
+const BUCKET_NAME = process.env.S3_BUCKET_NAME!; // S3バケット名を環境変数に設定
+
 export const postArticle = async (req: Request, res: Response) => {
   console.log("req.body:", req.body);
-  console.log("req.file:", req.file);
+  console.log("req.files:", req.files); // req.files にアップロードされたファイル情報
   try {
     const { title, content, tags } = req.body;
+
     if (!title || !content) {
-      res.status(400).json({ message: "タイトルと本文は必須" });
+      res.status(400).json({ message: "タイトルと本文は必須です。" });
       return;
     }
 
     // ファイルがアップロードされていない場合
-    if (!req.file) {
+    if (!req.files || !req.files.length) {
       res.status(400).json({ message: "画像ファイルが必要です。" });
       return;
     }
 
-    const fileName = `${Date.now()}_${req.file.originalname}`; // 新しいファイル名
+    // Multerが処理した複数のファイルを取得
+    const files: Express.Multer.File[] = req.files as Express.Multer.File[];
+
     // タグを配列に変換
-    const tagsArray = tags.split(",").map((tag) => tag.trim()); // tagsが文字列の場合を想定
+    const tagsArray = tags.split(",").map((tag) => tag.trim());
 
-    // Google Cloud Storage にファイルをアップロード
-    const blob = bucket.file(fileName);
-    const blobStream = blob.createWriteStream({
-      resumable: false, // 一括アップロードを行う
-      contentType: req.file.mimetype, // MIMEタイプを指定
-    });
+    // S3へのアップロード処理
+    try {
+      // 全ファイルをS3にアップロードし、URLを取得
+      const uploadResults = await Promise.all(
+        files.map(async (file) => {
+          const fileName = `${uuidv4()}_${file.originalname}`; // ランダムなファイル名生成
 
-    blobStream.on("error", (err) => {
-      console.error("GCSアップロードエラー:", err);
-      res.status(500).json({
-        message: "画像のアップロードに失敗しました。",
-      });
-    });
+          const uploadParams = {
+            Bucket: BUCKET_NAME, // S3バケット名
+            Key: fileName, // ファイル名
+            Body: file.buffer, // ファイル内容
+            ContentType: file.mimetype, // ファイルの MIME タイプ
+          };
 
-    blobStream.on("finish", async () => {
-      // GCSの公開URLを生成
-      const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
+          const command = new PutObjectCommand(uploadParams);
+          await s3Client.send(command);
+
+          // S3 の公開URLを生成
+          return `https://${BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
+        })
+      );
 
       // タグデータベース処理
       const tagRecords = await Promise.all(
@@ -65,7 +84,7 @@ export const postArticle = async (req: Request, res: Response) => {
         data: {
           title,
           content,
-          imageURL: publicUrl, // GCSのURLを保存
+          imageURLs: uploadResults, // アップロードしたすべての画像のURLを保存
           tags: {
             connect: tagRecords.map((tag) => ({ id: tag.id })), // タグと関連付け
           },
@@ -78,12 +97,13 @@ export const postArticle = async (req: Request, res: Response) => {
 
       // 作成成功時のレスポンス
       res.status(201).json(newArticle);
-    });
-
-    // メモリから GCS にデータをストリームで送信
-    blobStream.end(req.file.buffer);
+    } catch (err) {
+      console.error("S3 アップロードエラー:", err);
+      res.status(500).json({ message: "画像のアップロードに失敗しました。" });
+      return;
+    }
   } catch (error) {
-    console.error(error);
+    console.error("記事作成エラー:", error);
     res.status(500).json({ message: "記事の作成に失敗しました" });
   }
 };
