@@ -16,3 +16,4 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./signupController"), exports);
 __exportStar(require("./loginController"), exports);
+__exportStar(require("./logoutController"), exports);
