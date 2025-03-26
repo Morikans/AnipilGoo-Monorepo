@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import { articleRoutes, authRoutes } from "./routes";
+import { articleRoutes, authRoutes, userRoutes } from "./routes";
 
 dotenv.config();
 
@@ -14,7 +14,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use("/auth", authRoutes);
-// app.use("/user", userDataRoutes);
+app.use("/user", userRoutes);
 app.use("/article", articleRoutes);
 
 export default app;

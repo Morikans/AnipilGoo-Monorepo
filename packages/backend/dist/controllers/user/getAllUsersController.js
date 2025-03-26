@@ -9,30 +9,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signup = void 0;
-const utils_1 = require("../../utils");
+exports.getAllUsers = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password } = req.body;
+const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { data, error } = yield utils_1.supabase.auth.signUp({
-            email: email,
-            password: password,
-        });
-        if (error)
-            throw error;
-        // ユーザー情報をuserテーブルに保存
-        const newProfile = yield prisma.user.create({
-            data: {
-                id: data.user.id, // Supabase Auth の User ID
-                email: data.user.email,
-            },
-        });
-        res.status(200).send({ message: "新規登録が完了しました！", data });
+        // userテーブルから全てのユーザーデータを取得
+        const users = yield prisma.user.findMany();
+        res.status(200).json(users);
     }
-    catch (err) {
-        res.status(400).send({ error: err.message });
+    catch (error) {
+        console.error("Error fetching users:", error.message);
+        res.status(500).json({ error: "Failed to fetch users" });
     }
 });
-exports.signup = signup;
+exports.getAllUsers = getAllUsers;

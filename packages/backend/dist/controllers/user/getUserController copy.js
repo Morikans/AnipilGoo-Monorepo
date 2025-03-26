@@ -9,30 +9,29 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signup = void 0;
-const utils_1 = require("../../utils");
+exports.getUser = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password } = req.body;
+const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
     try {
-        const { data, error } = yield utils_1.supabase.auth.signUp({
-            email: email,
-            password: password,
+        // ユーザー情報をIDで取得
+        const user = yield prisma.user.findUnique({
+            where: { id },
         });
-        if (error)
-            throw error;
-        // ユーザー情報をuserテーブルに保存
-        const newProfile = yield prisma.user.create({
-            data: {
-                id: data.user.id, // Supabase Auth の User ID
-                email: data.user.email,
-            },
-        });
-        res.status(200).send({ message: "新規登録が完了しました！", data });
+        // ユーザーが見つからなかった場合の処理
+        if (!user) {
+            res.status(404).json({ error: "ユーザーが見つかりません" });
+            return;
+        }
+        // ユーザー情報をレスポンスとして返す
+        res.status(200).json(user);
+        return;
     }
-    catch (err) {
-        res.status(400).send({ error: err.message });
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "サーバーエラー" });
+        return;
     }
 });
-exports.signup = signup;
+exports.getUser = getUser;
