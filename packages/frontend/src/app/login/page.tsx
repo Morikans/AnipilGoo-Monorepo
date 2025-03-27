@@ -19,13 +19,17 @@ const page = () => {
         <div>
           <h2>ログイン</h2>
           <button
-            onClick={() => signIn("shirousagi.morikan@gmail.com", "new-password")}
+            onClick={() =>
+              signIn("shirousagi.morikan@gmail.com", "new-password")
+            }
           >
             ログイン
           </button>
           <h2>新規登録</h2>
           <button
-            onClick={() => signUp("shirousagi.morikan@gmail.com", "new-password")}
+            onClick={() =>
+              signUp("shirousagi.morikan@gmail.com", "new-password")
+            }
           >
             新規登録
           </button>

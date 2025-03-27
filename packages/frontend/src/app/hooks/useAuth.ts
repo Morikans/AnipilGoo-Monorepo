@@ -8,6 +8,7 @@ interface UseAuth {
   signUp: (email: string, password: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  isEmailVerified: () => boolean;
 }
 
 const useAuth = (): UseAuth => {
@@ -107,7 +108,19 @@ const useAuth = (): UseAuth => {
     return () => subscription.unsubscribe();
   }, []);
 
-  return { user, loading, signUp, signIn, signOut };
+  // メール認証状態チェック関数
+  const isEmailVerified = (): boolean => {
+    return user?.email_confirmed_at !== null;
+  };
+
+  return {
+    user,
+    loading,
+    signUp,
+    signIn,
+    signOut,
+    isEmailVerified,
+  };
 };
 
 export default useAuth;
