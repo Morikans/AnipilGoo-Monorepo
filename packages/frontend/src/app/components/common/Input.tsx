@@ -49,12 +49,14 @@ export const Input = <T extends FieldValues>({
             isVisible ? (
               <PiEyeSlashFill
                 size={28}
+                color="#5F5F5F"
                 className="ml-3 cursor-pointer"
                 onClick={handleToggle}
               />
             ) : (
               <PiEye
                 size={28}
+                color="#5F5F5F"
                 className="ml-3 cursor-pointer"
                 onClick={handleToggle}
               />

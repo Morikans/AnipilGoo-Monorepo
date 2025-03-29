@@ -17,7 +17,7 @@ export const Button: FC<ButtonProps> = ({ text, btnColor }) => {
   }
   return (
     <button
-      className={`${color} cursor-pointer rounded-md p-2 w-full`}
+      className={`${color} cursor-pointer rounded-md p-2 w-full hover:opacity-90`}
       type="submit"
     >
       {text}

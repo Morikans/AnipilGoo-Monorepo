@@ -1,7 +1,6 @@
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Input } from "../common/Input";
-import { Button } from "../common/Button";
+import { Button, Input, GoogleButton } from "../common";
 
 interface FormValues {
   email: string;
@@ -62,7 +61,7 @@ export const LoginForm = ({ formType }: ButtonProps) => {
             mask={true}
           />
         </div>
-
+        <GoogleButton text="Googleでログイン"/>
         <div className="mt-7">
           <Button text="送信" btnColor="blown" />
         </div>
