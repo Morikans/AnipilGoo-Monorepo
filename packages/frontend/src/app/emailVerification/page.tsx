@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useState } from "react";
 import { supabase } from "../utils/supabase";
 
@@ -13,7 +13,7 @@ const page = () => {
       const { data, error: userError } = await supabase.auth.getUser();
       if (userError || !data?.user?.email) {
         setMessage(
-          "ユーザー情報の取得に失敗しました。再度ログインしてください。"
+          "ユーザー情報の取得に失敗しました。再度ログインしてください。",
         );
         return;
       }

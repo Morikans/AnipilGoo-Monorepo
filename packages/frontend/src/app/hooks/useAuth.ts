@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabase } from "@/app/utils/supabase";
+import { supabase } from "@/utils/supabase";
 import { User, AuthApiError } from "@supabase/supabase-js";
 
 interface UseAuth {
@@ -28,7 +28,7 @@ const useAuth = (): UseAuth => {
 
       // ユーザーへ通知を追加（例: メール確認を促す文言）
       alert(
-        "確認メールが送信されました！メール内のリンクをクリックして登録を完了してください。"
+        "確認メールが送信されました！メール内のリンクをクリックして登録を完了してください。",
       );
     } catch (error) {
       if (error instanceof AuthApiError) {
@@ -55,7 +55,7 @@ const useAuth = (): UseAuth => {
         if (error.message === "Email not confirmed") {
           // 任意のメッセージを表示
           alert(
-            "メールアドレスが確認されていません。確認メールをご確認の上、認証を完了してください。"
+            "メールアドレスが確認されていません。確認メールをご確認の上、認証を完了してください。",
           );
           return;
         }
