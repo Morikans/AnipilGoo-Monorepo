@@ -16,14 +16,23 @@ datasource db {
 // TODO スネークケースの方がいいかも
 
 model Article {
-  id          Int      @id @default(autoincrement())
-  title       String   // 記事タイトル
-  content     String   // 記事本文
-  imageURLs   String[]
-  clickCount  Int      @default(0) // 記事クリック数
-  createdAt   DateTime  @default(now()) // 作成日
-  updatedAt   DateTime  @updatedAt      // 更新日
-  tags        Tag[]     @relation("articleTags") // 関連するタグ（多対多）
+  id                  Int       @id @default(autoincrement())
+  title               String    // 記事タイトル
+  animeName           String    @default("") // アニメ名
+  content             String    // 記事本文
+  thumbnailImageURL   String    @default("") // サムネ画像URL
+  imageURLs           String[]  // 画像URL
+  clickCount          Int       @default(0) // 記事クリック数
+  createdAt           DateTime  @default(now()) // 作成日
+  updatedAt           DateTime  @updatedAt      // 更新日
+  likesCount          Int       @default(0) // スキされた数
+  commentsCount       Int       @default(0) // コメント数
+  prefectureName      String    @default("未設定") // 県名
+  cityName            String    @default("未設定") // 市区町村名
+  tags                Tag[]     @relation("articleTags") // 関連するタグ（多対多）
+  // Userとのリレーション
+  userId              String    @default("")// UserモデルのIDを参照する外部キー
+  user                User      @relation("articleUser", fields: [userId], references: [id]) // リレーション設定
   // 便利な索引設定（任意）
   @@index([id, title]) // 高速なタイトル検索用インデックス
 }
@@ -38,5 +47,7 @@ model User {
   id         String   @id @default(uuid())
   email      String   @unique
   name       String?
+  imageURL   String
   createdAt  DateTime @default(now())
+  articles   Article[] @relation("articleUser")
 }

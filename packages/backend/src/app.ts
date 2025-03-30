@@ -1,9 +1,6 @@
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import { articleRoutes, authRoutes, userRoutes } from "./routes";
-
-dotenv.config();
 
 const corsOptions = {
   origin: "http://localhost:3000", // 許可するオリジンを指定

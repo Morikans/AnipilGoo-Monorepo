@@ -10,7 +10,7 @@
     "prisma:generate": "prisma generate",
     "start": "nodemon ./dist/index.js",
     "build": "npx tsc",
-    "build:watch": "npx tsc -w"
+    "build:watch": "pnpm tsc -w"
   },
   "keywords": [],
   "author": "",
