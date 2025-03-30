@@ -1,5 +1,5 @@
-"use client";
-import { LoginForm } from "@/components/feature/LoginForm";
+'use client'
+import { AuthForm } from "@/components";
 import useAuth from "../hooks/useAuth";
 
 const page = () => {
@@ -9,7 +9,7 @@ const page = () => {
     return <p>Loading...</p>;
   }
 
-  return <LoginForm formType="login" />;
+  return <AuthForm formType="login" />;
 };
 
 export default page;

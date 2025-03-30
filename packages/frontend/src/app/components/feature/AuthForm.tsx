@@ -1,6 +1,7 @@
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Button, Input, GoogleButton } from "../common";
+import { Button, Input, GoogleButton } from "@/components";
+import Link from "next/link";
 
 interface FormValues {
   email: string;
@@ -11,7 +12,7 @@ interface ButtonProps {
   formType: "login" | "signUp";
 }
 
-export const LoginForm = ({ formType }: ButtonProps) => {
+export const AuthForm = ({ formType }: ButtonProps) => {
   const {
     register,
     handleSubmit,
@@ -21,11 +22,25 @@ export const LoginForm = ({ formType }: ButtonProps) => {
     console.log(data);
   };
 
+  const formOptions = {
+    login: {
+      title: "ログイン",
+      linkText: "会員登録はこちら",
+      linkHref: "/signUp",
+    },
+    signUp: {
+      title: "新規登録",
+      linkText: "ログインはこちら",
+      linkHref: "/login",
+    },
+  };
+
+  const { title, linkText, linkHref } = formOptions[formType];
+
   return (
-    <div>
-      <h2>{formType === "signUp" ? "新規登録" : "ログイン"}</h2>
-      <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-10">
-        {/* Email の Input */}
+    <div className="mx-auto max-w-[34rem]">
+      <h2 className="font-bold text-2xl text-center">{title}</h2>
+      <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-10 mt-8">
         <Input
           id="email"
           text="メールアドレス"
@@ -42,7 +57,6 @@ export const LoginForm = ({ formType }: ButtonProps) => {
           error={errors.email?.message}
         />
 
-        {/* Password の Input */}
         <div className="mt-7 flex items-center">
           <Input
             id="password"
@@ -61,9 +75,16 @@ export const LoginForm = ({ formType }: ButtonProps) => {
             mask={true}
           />
         </div>
-        <GoogleButton text="Googleでログイン"/>
+        <GoogleButton text={`Googleでログイン`} />
         <div className="mt-7">
-          <Button text="送信" btnColor="blown" />
+          <Button text={title} btnColor="blown" />
+        </div>
+        <div className="block mt-7 text-center">
+          <Link href={linkHref}>
+            <p className="border-b-1 inline hover:opacity-80 cursor-pointer">
+              {linkText}
+            </p>
+          </Link>
         </div>
       </form>
     </div>
