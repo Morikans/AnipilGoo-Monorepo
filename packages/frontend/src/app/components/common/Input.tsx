@@ -1,3 +1,4 @@
+'use client'
 import { useState } from "react";
 import { UseFormRegister, FieldValues, Path } from "react-hook-form";
 import { PiEyeSlashFill } from "react-icons/pi";
