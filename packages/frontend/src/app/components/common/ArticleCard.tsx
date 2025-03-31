@@ -11,7 +11,7 @@ export interface ArticleType extends Article {
 export const ArticleCard = ({ article }: { article: ArticleType }) => {
   console.log(article.createdAt);
   return (
-    <div className="rounded bg-secondary">
+    <div className="rounded bg-secondary text-xs">
       <Link href={`/article/${article.id}`}>
         <p className="py-1 px-2 text-white">{article.animeName}</p>
         <img
@@ -19,19 +19,37 @@ export const ArticleCard = ({ article }: { article: ArticleType }) => {
           alt=""
           className="aspect-video object-cover"
         />
-        <div className="bg-white p-2">
-          <p>{article.title}</p>
-          <div className="flex content-center gap-1">
-            <FaMapMarkerAlt size={20} />
+        <div className="bg-white p-3 text-gray-500">
+          <p className="text-black text-base font-bold line-clamp-2 h-[48px]">
+            {article.title}
+          </p>
+          <div className="flex items-center gap-1 mt-3">
+            <FaMapMarkerAlt size={14} />
             <p>
               {article.prefectureName} {article.cityName}
             </p>
           </div>
-          <img src={article.user.imageURL} alt="" />
-          <p>{article.user.name}</p>
-          <p>{article.likesCount}</p>
-          <p>{article.commentsCount}</p>
-          <p>{daysAgoConvert(article.createdAt)}</p>
+          <div className="flex items-center gap-1 mt-3">
+            <img
+              src={article.user.imageURL}
+              alt=""
+              className="w-7 rounded-full"
+            />
+            <p className="line-clamp-1">{article.user.name}</p>
+          </div>
+          <div className="flex justify-between items-center mt-3">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-0.5">
+                <FaRegHeart />
+                <p>{article.likesCount}</p>
+              </div>
+              <div className="flex items-center gap-0.5">
+                <FaRegComment />
+                <p>{article.commentsCount}</p>
+              </div>
+            </div>
+            <p className="">{daysAgoConvert(article.createdAt)}</p>
+          </div>
         </div>
       </Link>
     </div>

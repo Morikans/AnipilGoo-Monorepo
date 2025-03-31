@@ -1,6 +1,6 @@
 import { ArticleType } from "@/components";
 import { User } from "@backend/types/prismaTypes";
-import { fakerJA as faker } from "@faker-js/faker";
+import { fakerJA as faker } from "@faker-js/faker"; // fakerJAだと精度低い...
 
 // ユーザーを生成する関数
 const createRandomUser = (): User => ({
@@ -14,7 +14,7 @@ const createRandomUser = (): User => ({
 // 記事を生成する関数
 const createRandomArticle = (): ArticleType => ({
   id: faker.number.int(),
-  title: faker.lorem.sentence(),
+  title: faker.lorem.text(),
   animeName: faker.lorem.words(2),
   content: faker.lorem.paragraph(),
   thumbnailImageURL: faker.image.avatar(),
