@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const HomeArticles = ({ type }: Props) => {
-  const articles = createRandomArticles(4);
+  const articles = createRandomArticles(0);
   return (
     <div>
       <SubTitle type={type} />

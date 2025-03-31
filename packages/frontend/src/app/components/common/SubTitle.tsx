@@ -1,4 +1,6 @@
 import React from "react";
+import { FaFire, FaRegComment, FaRegCalendarCheck } from "react-icons/fa6";
+import { MdOutlinePeopleAlt } from "react-icons/md";
 
 interface Props {
   type:
@@ -11,23 +13,28 @@ interface Props {
 export const SubTitle = ({ type }: Props) => {
   const typeOptions = {
     popularArticles: {
+      icon: <FaFire size={28} />,
       title: "人気記事",
     },
     followArticles: {
+      icon: <MdOutlinePeopleAlt size={28} />,
       title: "フォロー",
     },
     latestArticles: {
+      icon: <FaRegCalendarCheck size={28} />,
       title: "最新記事",
     },
     latestComments: {
+      icon: <FaRegComment size={28} />,
       title: "最新コメント",
     },
   };
 
-  const { title } = typeOptions[type];
+  const { icon, title } = typeOptions[type];
 
   return (
-    <div>
+    <div className="flex gap-1 items-center">
+      {icon}
       <h2 className="font-bold text-xl">{title}</h2>
     </div>
   );
