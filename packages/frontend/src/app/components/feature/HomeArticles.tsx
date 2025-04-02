@@ -7,11 +7,12 @@ interface Props {
     | "popularArticles"
     | "followArticles"
     | "latestArticles"
-    | "latestComments";
+    | "latestComments"
+    | "monthlyAnimeArticleRanking";
 }
 
 export const HomeArticles = ({ type }: Props) => {
-  const articles = createRandomArticles(0);
+  const articles = createRandomArticles(3);
   return (
     <div>
       <SubTitle type={type} />
