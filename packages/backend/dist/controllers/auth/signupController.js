@@ -29,7 +29,7 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 email: data.user.email,
             },
         });
-        res.status(200).send({ message: "新規登録が完了しました！", data });
+        res.status(200).send({ message: "認証メールを送信しました", data });
     }
     catch (err) {
         res.status(400).send({ error: err.message });
