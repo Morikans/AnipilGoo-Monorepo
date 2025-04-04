@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import { CropImageModal } from "../common";
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 
-export const Thumbnail = ({ imageURL }: { imageURL: string }) => {
+export const Thumbnail = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isModalShow, setIsModalShow] = useState<boolean>(false); // モーダルの状態
   const [imageSrc, setImageSrc] = useState<string | null>(null); // 選択された元画像
@@ -37,26 +37,28 @@ export const Thumbnail = ({ imageURL }: { imageURL: string }) => {
   return (
     <div>
       <p>title</p>
-      <label className="cursor-pointer">
-        <MdOutlineAddPhotoAlternate size={30} className="" />
-        <input
-          type="file"
-          ref={inputRef}
-          accept="image/*"
-          onChange={handleFileChange}
-        />
-      </label>
 
       {/* トリミング後の画像を表示 */}
-      {croppedImage && (
+      {croppedImage ? (
         <div>
-          <h3>トリミング後の画像:</h3>
           <img
             src={croppedImage}
             alt="トリミング後の画像"
-            style={{ width: "100%", maxWidth: "300px" }}
+            className="w-4/5 mx-auto"
           />
+          <button onClick={() => setCroppedImage(null)}>削除</button>
         </div>
+      ) : (
+        <label className="cursor-pointer inline-block">
+          <MdOutlineAddPhotoAlternate size={30} className="" />
+          <input
+            type="file"
+            ref={inputRef}
+            accept="image/*"
+            onChange={handleFileChange}
+            className="hidden"
+          />
+        </label>
       )}
 
       {isModalShow && imageSrc && (

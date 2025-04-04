@@ -2,6 +2,7 @@
 import React, { useState, useRef } from "react";
 import Cropper, { ReactCropperElement } from "react-cropper";
 import "cropperjs/dist/cropper.css"; // Cropper.jsのスタイルをインポート
+import { Button } from "./Button";
 
 interface Props {
   imageSrc: string;
@@ -26,27 +27,24 @@ export const CropImageModal = ({ imageSrc, onClose, onCrop }: Props) => {
 
   return (
     // TODO モーダルサイズ調整必要かも
-    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-50">
-      {/* Cropperコンポーネントの表示 */}
-      <Cropper
-        src={imageSrc}
-        className="w-full "
-        aspectRatio={16 / 9}
-        guides={false} // ガイド線を表示しない
-        ref={cropperRef} // Cropperインスタンスへの参照を設定
-        viewMode={1} // トリミングエリアが画像の外に出ないように設定
-        dragMode="move"
-        minCropBoxWidth={200}
-      />
-
-      {/* トリミング実行ボタン */}
-      <button
-        className="col-md-auto col-12 btn btn-success mt-3"
-        onClick={handleCrop}
-      >
-        トリミング
-      </button>
-      <button onClick={onClose}>閉じる</button>
+    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/70 z-50">
+      <div className="bg-primary w-2/3 overflow-hidden p-1">
+        <Cropper
+          src={imageSrc}
+          className="w-full h-96"
+          aspectRatio={16 / 9}
+          guides={false} // ガイド線を表示しない
+          ref={cropperRef} // Cropperインスタンスへの参照を設定
+          viewMode={1} // トリミングエリアが画像の外に出ないように設定
+          dragMode="move"
+          minCropBoxWidth={200}
+          background={false}
+        />
+        <div className="flex justify-center items-center gap-10 p-4">
+          <Button text="トリミング" onClick={handleCrop} />
+          <Button text="閉じる" btnColor='white' onClick={onClose} />
+        </div>
+      </div>
     </div>
   );
 };

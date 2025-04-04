@@ -6,7 +6,7 @@ const page = () => {
 
   return (
     <div>
-      <Thumbnail imageURL='./sample.png'/>
+      <Thumbnail />
     </div>
   );
 };
