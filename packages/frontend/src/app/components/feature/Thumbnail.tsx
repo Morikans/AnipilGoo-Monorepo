@@ -2,6 +2,7 @@
 import React, { useRef, useState } from "react";
 import { CropImageModal } from "../common";
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
+import { HiOutlineXMark } from "react-icons/hi2";
 
 export const Thumbnail = () => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -35,22 +36,27 @@ export const Thumbnail = () => {
     }
   };
   return (
-    <div>
-      <p>title</p>
+    <div className="w-full">
+      <p className="font-bold text-xl">サムネイル画像</p>
 
       {/* トリミング後の画像を表示 */}
       {croppedImage ? (
-        <div>
+        <div className="relative mt-3">
           <img
             src={croppedImage}
             alt="トリミング後の画像"
-            className="w-4/5 mx-auto"
+            className="w-full mx-auto"
           />
-          <button onClick={() => setCroppedImage(null)}>削除</button>
+          <button
+            onClick={() => setCroppedImage(null)}
+            className="cursor-pointer p-2 rounded-full bg-black/50 absolute right-3 top-3"
+          >
+            <HiOutlineXMark size={25} color="white" />
+          </button>
         </div>
       ) : (
-        <label className="cursor-pointer inline-block">
-          <MdOutlineAddPhotoAlternate size={30} className="" />
+        <label className="cursor-pointer inline-block bg-black/70 p-3 rounded-full mt-3">
+          <MdOutlineAddPhotoAlternate size={30} color="white" />
           <input
             type="file"
             ref={inputRef}

@@ -5,7 +5,7 @@ import { Thumbnail } from "@/components";
 const page = () => {
 
   return (
-    <div>
+    <div className="w-2xl mx-auto flex">
       <Thumbnail />
     </div>
   );

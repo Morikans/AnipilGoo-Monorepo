@@ -26,7 +26,6 @@ export const CropImageModal = ({ imageSrc, onClose, onCrop }: Props) => {
   };
 
   return (
-    // TODO モーダルサイズ調整必要かも
     <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/70 z-50">
       <div className="bg-primary w-2/3 overflow-hidden p-1">
         <Cropper
@@ -41,8 +40,8 @@ export const CropImageModal = ({ imageSrc, onClose, onCrop }: Props) => {
           background={false}
         />
         <div className="flex justify-center items-center gap-10 p-4">
+          <Button text="キャンセル" btnColor='white' onClick={onClose} />
           <Button text="トリミング" onClick={handleCrop} />
-          <Button text="閉じる" btnColor='white' onClick={onClose} />
         </div>
       </div>
     </div>
