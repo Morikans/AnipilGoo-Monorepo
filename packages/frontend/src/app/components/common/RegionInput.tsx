@@ -6,7 +6,6 @@ import { PiEye } from "react-icons/pi";
 
 interface Props<T extends FieldValues> {
   id: string;
-  text: string;
   type?: string;
   placeholder?: string;
   name: Path<T>;
@@ -16,9 +15,8 @@ interface Props<T extends FieldValues> {
   mask?: true;
 }
 
-export const Input = <T extends FieldValues>({
+export const RegionInput = <T extends FieldValues>({
   id,
-  text,
   type = "text",
   placeholder = "",
   name,
@@ -35,10 +33,10 @@ export const Input = <T extends FieldValues>({
     <div className="w-full">
       <label htmlFor={id}>
         <div className="flex gap-2 items-center">
-          <p className="font-bold">{text}</p>
+          <p className="font-bold">聖地の場所</p>
           {error && <p className="text-red-500 text-xs">{error}</p>}
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
           <input
             id={id}
             type={isVisible ? type : "text"}
@@ -46,23 +44,13 @@ export const Input = <T extends FieldValues>({
             placeholder={placeholder}
             {...register(name, validation)}
           />
-          {mask ? (
-            isVisible ? (
-              <PiEyeSlashFill
-                size={28}
-                color="#5F5F5F"
-                className="ml-3 cursor-pointer"
-                onClick={handleToggle}
-              />
-            ) : (
-              <PiEye
-                size={28}
-                color="#5F5F5F"
-                className="ml-3 cursor-pointer"
-                onClick={handleToggle}
-              />
-            )
-          ) : null}
+          <input
+            id={id}
+            type={isVisible ? type : "text"}
+            className="bg-white w-full rounded-sm border border-gray-300 p-1 focus:outline-none transition duration-15 focus:bg-orange-50 focus:ring-2 focus:ring-orange-500/60"
+            placeholder={placeholder}
+            {...register(name, validation)}
+          />
         </div>
       </label>
     </div>
