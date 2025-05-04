@@ -62,7 +62,7 @@ const Page = () => {
   };
 
   // 画像変更処理
-  const handleImageChange = (index: number, files: FileList | null) => {
+  const handleImageChange = (index: number, files: File[]) => {
     if (files) {
       const updatedReports = [...reports];
       updatedReports[index].image = Array.from(files); // ファイルリストを配列化

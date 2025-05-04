@@ -2,6 +2,7 @@
 
 import { PostFormValues } from "@/post/page";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
+import { UploadImage } from "../common";
 
 // レポート型の定義
 interface Report {
@@ -22,7 +23,7 @@ export const Report = ({
 }: {
   report: Report;
   index: number;
-  onImageChange: (index: number, files: FileList | null) => void;
+  onImageChange: (index: number, files: File[]) => void;
   onDelete: (index: number) => void;
   register: UseFormRegister<PostFormValues>;
   errors: FieldErrors<PostFormValues>;
@@ -32,25 +33,7 @@ export const Report = ({
       <h2 className="font-bold text-lg mb-2">巡礼レポート {index + 1}</h2>
 
       {/* 画像アップロード */}
-      <div className="mb-4">
-        <label className="block mb-1">画像アップロード</label>
-        <input
-          type="file"
-          multiple
-          onChange={(e) => onImageChange(index, e.target.files)} // ファイル操作
-          className="border p-2 w-full"
-        />
-        <div className="flex gap-2 mt-2">
-          {report.image.map((file, imgIndex) => (
-            <img
-              key={imgIndex}
-              src={URL.createObjectURL(file)} // ファイルのプレビュー
-              alt={`プレビュー ${imgIndex}`}
-              className="w-20 h-20 object-cover border"
-            />
-          ))}
-        </div>
-      </div>
+      <UploadImage onChange={(files) => onImageChange(index, files)} />
 
       {/* 内容フィールド */}
       <div>
