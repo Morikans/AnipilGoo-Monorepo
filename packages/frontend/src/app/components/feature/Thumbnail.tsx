@@ -41,7 +41,7 @@ export const Thumbnail = () => {
 
       {/* トリミング後の画像を表示 */}
       {croppedImage ? (
-        <div className="relative mt-3">
+        <div className="relative mt-3 w-1/2">
           <img
             src={croppedImage}
             alt="トリミング後の画像"
