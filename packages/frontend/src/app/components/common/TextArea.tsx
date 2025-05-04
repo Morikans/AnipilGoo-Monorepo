@@ -1,43 +1,36 @@
-"use client";
-import { PostFormValues } from "@/post/page";
-import React, { useRef } from "react";
-import { FieldErrors, UseFormRegister } from "react-hook-form";
+import React from "react";
+import { FieldValues, Path, UseFormRegister } from "react-hook-form";
 
-interface Props {
-  register: UseFormRegister<PostFormValues>;
-  errors: FieldErrors<PostFormValues>;
-  index: number;
+interface Props<T extends FieldValues> {
+  register: UseFormRegister<T>;
+  name: Path<T>;
+  validation?: object;
+  error?: string;
+  text: string;
 }
 
-export const TextArea = ({ register, errors, index }: Props) => {
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-
-  const handleInput = () => {
-    if (textareaRef.current) {
-      // 高さをリセットしてからスクロール高さを取得
-      textareaRef.current.style.height = "auto"; // 高さをリセット
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`; // 必要な高さを設定
-    }
-  };
-
+export const TextArea = <T extends FieldValues>({
+  register,
+  name,
+  validation,
+  error,
+  text,
+}: Props<T>) => {
   return (
     <label className="block mb-1">
-      内容
+      <p className="font-bold">{text}</p>
+      {error && <p className="text-red-500 text-xs">{error}</p>}
       <textarea
-        {...register(`reports.${index}.inputValue` as const, {
-          required: "内容を入力してください",
-        })}
+        {...register(name, validation)}
         placeholder="内容を入力してください"
-        ref={textareaRef} // テキストエリアのDOMを参照
-        onInput={handleInput} // 入力時に高さを調整
-        className="border p-2 w-full resize-none overflow-hidden" // `resize-none` は手動リサイズの無効化
-        style={{ minHeight: "50px", lineHeight: "1.5" }} // 最小高さなどを設定
+        onInput={(e) => {
+          const textarea = e.target as HTMLTextAreaElement;
+          textarea.style.height = "auto"; // 高さをリセット
+          textarea.style.height = `${textarea.scrollHeight}px`; // 必要な高さを設定
+        }}
+        className="bg-white w-full rounded-sm border border-gray-300 p-1 focus:outline-none transition duration-15 focus:bg-orange-50 focus:ring-2 focus:ring-orange-500/60 resize-none overflow-hidden"
+        style={{ minHeight: "50px", lineHeight: "1.5" }}
       />
-      {errors.reports && errors.reports[index]?.inputValue && (
-        <p className="text-red-500 text-sm">
-          {errors.reports[index]?.inputValue?.message}
-        </p>
-      )}
     </label>
   );
 };

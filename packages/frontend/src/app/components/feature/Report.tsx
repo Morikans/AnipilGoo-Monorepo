@@ -44,7 +44,15 @@ export const Report = ({
       />
 
       {/* 内容フィールド */}
-      <TextArea register={register} errors={errors} index={index} />
+      <TextArea
+        register={register}
+        name={`reports.${index}.inputValue`}
+        validation={{
+          required: "内容を入力してください", // 必須バリデーションのエラーメッセージ
+        }}
+        error={errors.reports?.[index]?.inputValue?.message}
+        text="説明"
+      />
 
       {/* 聖地の場所フィールド */}
       <label className="block mb-1 mt-4">
