@@ -1,62 +1,63 @@
 "use client";
 import { PostFormValues } from "@/post/page";
 import { useState } from "react";
-import { FieldErrors } from "react-hook-form";
+import {
+  FieldErrors,
+  FieldValues,
+  Path,
+  UseFormRegister,
+} from "react-hook-form";
 import { HiOutlineXMark } from "react-icons/hi2";
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 
-interface Props {
-  onChange: (files: File[]) => void; // 親へファイル情報を渡す
+interface Props<T extends FieldValues> {
+  register: UseFormRegister<T>;
   maxFiles?: number;
-  errors: FieldErrors<PostFormValues>;
+  name: Path<T>;
+  error?: string;
+  index: number; // レポート番号を受け取る
+  onChange: (index: number, files: File[]) => void; // レポート番号付きのonChange
 }
 
-/**
- * 画像アップロードコンポーネント
- * @param multiple 複数選択かどうか
- * @param onChange ファイル選択時に呼び出されるコールバック関数
- */
-export const UploadImage = ({ onChange, maxFiles = 4, errors }: Props) => {
-  const [images, setImages] = useState<File[]>([]); // ファイル情報
-  const [previewUrls, setPreviewUrls] = useState<string[]>([]); // ファイルURL
-  const [error, setError] = useState<string | null>(null);
+export const UploadImage = <T extends FieldValues>({
+  maxFiles = 4,
+  error,
+  name,
+  register,
+  index,
+  onChange, // レポート番号付きのonChangeを受け取る
+}: Props<T>) => {
+  const [images, setImages] = useState<File[]>([]);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
-    // FileList を配列に変換し、状態に追加
-    const newFiles = Array.from(e.target.files);
 
-    // 合計ファイル数が制限を超える場合は処理を中断
-    if (images.length + newFiles.length > maxFiles) {
-      setError(`画像は最大${maxFiles}枚まで添付できます。`);
+    const newFiles = Array.from(e.target.files);
+    const totalImages = images.length + newFiles.length;
+    if (totalImages > maxFiles) {
+      alert(`アップロード可能な画像は最大 ${maxFiles} 枚までです。`);
       return;
     }
 
-    setImages((prev) => [...prev, ...newFiles]);
+    setImages((prevImages) => {
+      const updatedImages = [...prevImages, ...newFiles];
+      onChange(index, updatedImages); // 親コンポーネントにレポート番号と画像リストを送信
+      return updatedImages;
+    });
 
-    // 新たに選択されたファイルのプレビュー URL を生成
     const newUrls = newFiles.map((file) => URL.createObjectURL(file));
-    setPreviewUrls((prev) => [...prev, ...newUrls]);
-    setError(null);
-
-    // 必要に応じて外部へ選択されたファイルを渡す
-    if (onChange) {
-      onChange([...images, ...newFiles]);
-    }
+    setPreviewUrls((prevUrls) => [...prevUrls, ...newUrls]);
   };
 
-  const handleRemoveImage = (index: number) => {
-    // 削除対象の URL（プレビュー用）に対応するファイルを特定
+  const handleRemoveImage = (removeIndex: number) => {
     setImages((prevImages) => {
-      const newImages = prevImages.filter((_, i) => i !== index); // 削除済み画像を除く
-      return newImages;
+      const updatedImages = prevImages.filter((_, i) => i !== removeIndex);
+      onChange(index, updatedImages); // 親コンポーネントに変更を通知
+      return updatedImages;
     });
 
-    setPreviewUrls((prevUrls) => {
-      const newUrls = prevUrls.filter((_, i) => i !== index); // 削除済みプレビューURLを除く
-      return newUrls;
-    });
-    setError(null);
+    setPreviewUrls((prevUrls) => prevUrls.filter((_, i) => i !== removeIndex));
   };
 
   return (
@@ -66,31 +67,33 @@ export const UploadImage = ({ onChange, maxFiles = 4, errors }: Props) => {
           <MdOutlineAddPhotoAlternate size={30} color="white" />
           <input
             type="file"
-            className="hidden"
-            onChange={handleFileChange}
             multiple
+            className="hidden"
+            {...register(name, {
+              onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                handleFileChange(e);
+                // React Hook FormのonChangeを呼び出す
+                e.target.dispatchEvent(new Event("input", { bubbles: true }));
+              },
+            })}
           />
         </label>
       )}
 
-      {/* エラーメッセージ */}
       {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
 
-      {/* プレビュー画像の表示 */}
       {previewUrls.length > 0 && (
         <div className="mt-3 grid grid-cols-2 gap-4">
-          {previewUrls.map((url, index) => (
-            <div key={index} className="relative">
-              {/* プレビュー画像 */}
+          {previewUrls.map((url, i) => (
+            <div key={i} className="relative">
               <img
                 src={url}
-                alt={`プレビュー ${index + 1}`}
+                alt={`プレビュー ${i + 1}`}
                 className="w-full mx-auto object-cover rounded-lg border aspect-video"
               />
-              {/* 画像削除ボタン */}
               <button
                 type="button"
-                onClick={() => handleRemoveImage(index)}
+                onClick={() => handleRemoveImage(i)}
                 className="cursor-pointer p-2 rounded-full bg-black/50 absolute right-3 top-3"
               >
                 <HiOutlineXMark size={25} color="white" />

@@ -80,17 +80,18 @@ const Page = () => {
         <Thumbnail />
 
         {/* レポート一覧 */}
-        {reports.map((report, index) => (
-          <Report
-            key={report.id}
-            report={report}
-            index={index}
-            onImageChange={handleImageChange}
-            onDelete={handleDeleteReport}
-            register={register}
-            errors={errors}
-          />
-        ))}
+        <div className="mt-8">
+          {reports.map((report, index) => (
+            <Report
+              key={report.id}
+              index={index}
+              onImageChange={handleImageChange}
+              onDelete={handleDeleteReport}
+              register={register}
+              errors={errors}
+            />
+          ))}
+        </div>
 
         {/* レポート追加ボタン */}
         <button

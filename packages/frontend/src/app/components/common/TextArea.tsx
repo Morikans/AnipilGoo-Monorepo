@@ -17,7 +17,7 @@ export const TextArea = <T extends FieldValues>({
   text,
 }: Props<T>) => {
   return (
-    <label className="block">
+    <label>
       <p className="font-bold">{text}</p>
       {error && <p className="text-red-500 text-xs">{error}</p>}
       <textarea
