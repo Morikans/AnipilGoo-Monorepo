@@ -1,13 +1,8 @@
 "use client";
 
 import { PostFormValues } from "@/post/page";
-import {
-  FieldErrors,
-  RegisterOptions,
-  UseFormRegister,
-  UseFormRegisterReturn,
-} from "react-hook-form";
-import { TextArea, UploadImage } from "../common";
+import { FieldErrors, UseFormRegister } from "react-hook-form";
+import { Input, TextArea, UploadImage } from "../common";
 
 // レポート型の定義
 interface Report {
@@ -19,7 +14,6 @@ interface Report {
 
 // 個別レポートの単一コンポーネント
 export const Report = ({
-  report,
   index,
   onImageChange,
   onDelete,
@@ -55,22 +49,16 @@ export const Report = ({
       />
 
       {/* 聖地の場所フィールド */}
-      <label className="block mb-1 mt-4">
-        聖地の場所
-        <input
-          type="text"
-          {...register(`reports.${index}.place` as const, {
-            required: "聖地の場所を入力してください",
-          })}
-          placeholder="聖地の場所を入力"
-          className="bg-white w-full rounded-sm border border-gray-300 p-1 focus:outline-none transition duration-15 focus:bg-orange-50 focus:ring-2 focus:ring-orange-500/60"
-        />
-        {errors.reports && errors.reports[index]?.place && (
-          <p className="text-red-500 text-sm">
-            {errors.reports[index]?.place?.message}
-          </p>
-        )}
-      </label>
+      <Input
+        id="region"
+        text="聖地の場所"
+        name={`reports.${index}.place`}
+        register={register}
+        validation={{
+          required: "聖地の場所を入力してください",
+        }}
+        error={errors.reports?.[index]?.place?.message}
+      />
 
       {/* 削除ボタン */}
       <button
