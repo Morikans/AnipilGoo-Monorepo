@@ -17,10 +17,13 @@ export const TextArea = <T extends FieldValues>({
   text,
 }: Props<T>) => {
   return (
-    <label>
-      <p className="font-bold">{text}</p>
-      {error && <p className="text-red-500 text-xs">{error}</p>}
+    <label htmlFor={name}>
+      <div className="flex gap-2 items-center">
+        <p className="font-bold">{text}</p>
+        {error && <p className="text-red-500 text-xs">{error}</p>}
+      </div>
       <textarea
+        id={name}
         {...register(name, validation)}
         placeholder="内容を入力してください"
         onInput={(e) => {

@@ -1,12 +1,5 @@
 "use client";
-import { PostFormValues } from "@/post/page";
-import { useState } from "react";
-import {
-  FieldErrors,
-  FieldValues,
-  Path,
-  UseFormRegister,
-} from "react-hook-form";
+import { FieldValues, Path, UseFormRegister } from "react-hook-form";
 import { HiOutlineXMark } from "react-icons/hi2";
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 
@@ -15,8 +8,10 @@ interface Props<T extends FieldValues> {
   maxFiles?: number;
   name: Path<T>;
   error?: string;
-  index: number; // レポート番号を受け取る
-  onChange: (index: number, files: File[]) => void; // レポート番号付きのonChange
+  images: File[]; // 親から受け取る画像
+  previewUrls: string[]; // 親から受け取るプレビューURL
+  index: number; // レポート番号
+  onChange: (index: number, files: File[]) => void; // 状態変更を親に伝える
 }
 
 export const UploadImage = <T extends FieldValues>({
@@ -24,12 +19,11 @@ export const UploadImage = <T extends FieldValues>({
   error,
   name,
   register,
+  images,
+  previewUrls,
   index,
-  onChange, // レポート番号付きのonChangeを受け取る
+  onChange,
 }: Props<T>) => {
-  const [images, setImages] = useState<File[]>([]);
-  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
 
@@ -40,28 +34,20 @@ export const UploadImage = <T extends FieldValues>({
       return;
     }
 
-    setImages((prevImages) => {
-      const updatedImages = [...prevImages, ...newFiles];
-      onChange(index, updatedImages); // 親コンポーネントにレポート番号と画像リストを送信
-      return updatedImages;
-    });
-
-    const newUrls = newFiles.map((file) => URL.createObjectURL(file));
-    setPreviewUrls((prevUrls) => [...prevUrls, ...newUrls]);
+    const updatedImages = [...images, ...newFiles];
+    // 親に変更したデータを通知
+    onChange(index, updatedImages);
   };
 
   const handleRemoveImage = (removeIndex: number) => {
-    setImages((prevImages) => {
-      const updatedImages = prevImages.filter((_, i) => i !== removeIndex);
-      onChange(index, updatedImages); // 親コンポーネントに変更を通知
-      return updatedImages;
-    });
-
-    setPreviewUrls((prevUrls) => prevUrls.filter((_, i) => i !== removeIndex));
+    const updatedImages = images.filter((_, i) => i !== removeIndex);
+    // 親に変更したデータを通知
+    onChange(index, updatedImages);
   };
 
   return (
     <div>
+      {/* ファイル選択ボタン */}
       {images.length < maxFiles && (
         <label className="cursor-pointer inline-block bg-black/70 p-3 rounded-full mt-3">
           <MdOutlineAddPhotoAlternate size={30} color="white" />
@@ -72,7 +58,6 @@ export const UploadImage = <T extends FieldValues>({
             {...register(name, {
               onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
                 handleFileChange(e);
-                // React Hook FormのonChangeを呼び出す
                 e.target.dispatchEvent(new Event("input", { bubbles: true }));
               },
             })}
@@ -80,8 +65,10 @@ export const UploadImage = <T extends FieldValues>({
         </label>
       )}
 
+      {/* エラーメッセージ */}
       {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
 
+      {/* 画像プレビュー */}
       {previewUrls.length > 0 && (
         <div className="mt-3 grid grid-cols-2 gap-4">
           {previewUrls.map((url, i) => (

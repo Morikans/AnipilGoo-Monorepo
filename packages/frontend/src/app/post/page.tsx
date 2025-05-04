@@ -1,13 +1,13 @@
 "use client";
-
 import { useForm } from "react-hook-form";
 import { Thumbnail, Report } from "@/components";
 
 interface Report {
   id: number;
-  image: File[]; // 複数画像データ
+  images: File[]; // 複数画像データ
   inputValue: string;
   place: string;
+  previewUrls: string[];
 }
 
 export interface PostFormValues {
@@ -32,9 +32,10 @@ const Page = () => {
       reports: [
         {
           id: 1,
-          image: [],
+          images: [],
           inputValue: "",
           place: "",
+          previewUrls: [],
         },
       ],
     },
@@ -46,9 +47,10 @@ const Page = () => {
   const handleAddReport = () => {
     const newReport = {
       id: Date.now(),
-      image: [],
+      images: [],
       inputValue: "",
       place: "",
+      previewUrls: [],
     };
     setValue("reports", [...reports, newReport]);
   };
@@ -65,7 +67,14 @@ const Page = () => {
   const handleImageChange = (index: number, files: File[]) => {
     if (files) {
       const updatedReports = [...reports];
-      updatedReports[index].image = Array.from(files); // ファイルリストを配列化
+      const newPreviewUrls = files.map(
+        (file) => URL.createObjectURL(file) // プレビューURLを生成
+      );
+
+      // images と previewUrls を同時に更新
+      updatedReports[index].images = Array.from(files);
+      updatedReports[index].previewUrls = newPreviewUrls;
+
       setValue("reports", updatedReports);
     }
   };
@@ -89,26 +98,31 @@ const Page = () => {
               onDelete={handleDeleteReport}
               register={register}
               errors={errors}
+              reportData={report}
             />
           ))}
         </div>
 
         {/* レポート追加ボタン */}
-        <button
-          type="button"
-          onClick={handleAddReport}
-          className="bg-blue-500 text-white py-2 px-4 rounded mt-4"
-        >
-          レポートを追加する
-        </button>
+        <div>
+          <button
+            type="button"
+            onClick={handleAddReport}
+            className="w-full border py-1 rounded mt-4 cursor-pointer text-4xl"
+          >
+            +
+          </button>
+        </div>
 
         {/* フォーム送信ボタン */}
-        <button
-          type="submit"
-          className="bg-green-500 text-white py-2 px-4 rounded mt-4"
-        >
-          フォームを送信
-        </button>
+        <div className="text-right">
+          <button
+            type="submit"
+            className="bg-blue-500 text-white py-2 px-4 rounded mt-4 cursor-pointer"
+          >
+            フォームを送信
+          </button>
+        </div>
       </form>
     </div>
   );
