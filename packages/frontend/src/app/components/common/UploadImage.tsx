@@ -1,11 +1,14 @@
 "use client";
+import { PostFormValues } from "@/post/page";
 import { useState } from "react";
+import { FieldErrors } from "react-hook-form";
 import { HiOutlineXMark } from "react-icons/hi2";
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 
 interface Props {
   onChange: (files: File[]) => void; // 親へファイル情報を渡す
   maxFiles?: number;
+  errors: FieldErrors<PostFormValues>;
 }
 
 /**
@@ -13,10 +16,7 @@ interface Props {
  * @param multiple 複数選択かどうか
  * @param onChange ファイル選択時に呼び出されるコールバック関数
  */
-export const UploadImage = ({
-  onChange,
-  maxFiles = 4,
-}: Props) => {
+export const UploadImage = ({ onChange, maxFiles = 4, errors }: Props) => {
   const [images, setImages] = useState<File[]>([]); // ファイル情報
   const [previewUrls, setPreviewUrls] = useState<string[]>([]); // ファイルURL
   const [error, setError] = useState<string | null>(null);
@@ -57,11 +57,7 @@ export const UploadImage = ({
       {images.length < maxFiles && (
         <label className="cursor-pointer inline-block bg-black/70 p-3 rounded-full mt-3">
           <MdOutlineAddPhotoAlternate size={30} color="white" />
-          <input
-            type="file"
-            className="hidden"
-            onChange={handleFileChange}
-          />
+          <input type="file" className="hidden" onChange={handleFileChange} />
         </label>
       )}
 

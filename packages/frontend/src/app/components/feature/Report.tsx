@@ -1,8 +1,13 @@
 "use client";
 
 import { PostFormValues } from "@/post/page";
-import { FieldErrors, UseFormRegister } from "react-hook-form";
-import { UploadImage } from "../common";
+import {
+  FieldErrors,
+  RegisterOptions,
+  UseFormRegister,
+  UseFormRegisterReturn,
+} from "react-hook-form";
+import { TextArea, UploadImage } from "../common";
 
 // レポート型の定義
 interface Report {
@@ -33,29 +38,17 @@ export const Report = ({
       <h2 className="font-bold text-lg mb-2">巡礼レポート {index + 1}</h2>
 
       {/* 画像アップロード */}
-      <UploadImage onChange={(files) => onImageChange(index, files)} />
+      <UploadImage
+        onChange={(files) => onImageChange(index, files)}
+        errors={errors}
+      />
 
       {/* 内容フィールド */}
-      <div>
-        <label className="block mb-1">内容</label>
-        <input
-          type="text"
-          {...register(`reports.${index}.inputValue` as const, {
-            required: "内容を入力してください",
-          })}
-          placeholder="内容を入力してください"
-          className="border p-2 w-full"
-        />
-        {errors.reports && errors.reports[index]?.inputValue && (
-          <p className="text-red-500 text-sm">
-            {errors.reports[index]?.inputValue?.message}
-          </p>
-        )}
-      </div>
+      <TextArea register={register} errors={errors} index={index} />
 
       {/* 聖地の場所フィールド */}
-      <div>
-        <label className="block mb-1 mt-4">聖地の場所</label>
+      <label className="block mb-1 mt-4">
+        聖地の場所
         <input
           type="text"
           {...register(`reports.${index}.place` as const, {
@@ -69,13 +62,13 @@ export const Report = ({
             {errors.reports[index]?.place?.message}
           </p>
         )}
-      </div>
+      </label>
 
       {/* 削除ボタン */}
       <button
         type="button"
         onClick={() => onDelete(index)}
-        className="bg-red-500 text-white py-2 px-4 rounded mt-4"
+        className="bg-red-500 text-white py-2 px-4 rounded mt-4 cursor-pointer"
       >
         このレポートを削除
       </button>
