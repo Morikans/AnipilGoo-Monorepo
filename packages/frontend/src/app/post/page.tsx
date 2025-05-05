@@ -14,8 +14,8 @@ export interface ReportTypes {
 
 export interface PostFormValues {
   title: string;
+  thumbnail: File | null;
   animeName: string;
-  region: string;
   reports: ReportTypes[];
 }
 
@@ -31,8 +31,8 @@ const Page = () => {
   } = useForm<PostFormValues>({
     defaultValues: {
       title: "",
+      thumbnail: null,
       animeName: "",
-      region: "",
       reports: [
         {
           id: 1,
@@ -95,7 +95,7 @@ const Page = () => {
   return (
     <div className="p-4">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Thumbnail />
+        <Thumbnail register={register} error={errors} setValue={setValue} />
 
         {/* レポート一覧 */}
         <div className="mt-8">

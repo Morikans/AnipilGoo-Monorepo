@@ -3,8 +3,16 @@ import React, { useRef, useState } from "react";
 import { CropImageModal } from "../common";
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 import { HiOutlineXMark } from "react-icons/hi2";
+import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
+import { PostFormValues } from "@/post/page";
 
-export const Thumbnail = () => {
+interface Props {
+  register: UseFormRegister<PostFormValues>;
+  setValue: UseFormSetValue<PostFormValues>; // React Hook Formの値更新用
+  error: FieldErrors<PostFormValues>;
+}
+
+export const Thumbnail = ({ register, setValue, error }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isModalShow, setIsModalShow] = useState<boolean>(false); // モーダルの状態
   const [imageSrc, setImageSrc] = useState<string | null>(null); // 選択された元画像
@@ -20,6 +28,9 @@ export const Thumbnail = () => {
         setIsModalShow(true); // モーダルを表示
       };
       reader.readAsDataURL(file);
+
+      // React Hook Formにファイルをセット
+      setValue("thumbnail", file);
     }
   };
 
@@ -35,9 +46,17 @@ export const Thumbnail = () => {
       inputRef.current.value = ""; // ファイル選択フィールドをリセット
     }
   };
+
   return (
     <div className="w-full">
-      <p className="font-bold text-xl">サムネイル画像</p>
+      <div className="flex gap-2 items-center">
+        <p className="font-bold text-xl">サムネイル画像</p>
+        {error && (
+          <p className="text-red-500 text-sm">
+            {error.thumbnail?.message}
+          </p>
+        )}
+      </div>
 
       {/* トリミング後の画像を表示 */}
       {croppedImage ? (
@@ -59,9 +78,18 @@ export const Thumbnail = () => {
           <MdOutlineAddPhotoAlternate size={30} color="white" />
           <input
             type="file"
-            ref={inputRef}
             accept="image/*"
-            onChange={handleFileChange}
+            {...register("thumbnail", {
+              onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                handleFileChange(e); // ファイル変更時の処理を呼び出し
+              },
+              required: "サムネイル画像は必須です", // 必須バリデーションメッセージ
+            })}
+            ref={(e) => {
+              // registerのrefを割り当てつつ、独自のrefとしても保持
+              register("thumbnail").ref(e);
+              inputRef.current = e; // useRefにも保存
+            }}
             className="hidden"
           />
         </label>
