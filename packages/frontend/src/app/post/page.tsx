@@ -2,11 +2,13 @@
 import { useForm } from "react-hook-form";
 import { Thumbnail, Report } from "@/components";
 
-interface Report {
+export interface ReportTypes {
   id: number;
   images: File[]; // 複数画像データ
   inputValue: string;
-  place: string;
+  prefecture: string;
+  city: string;
+  overseasRegion: string;
   previewUrls: string[];
 }
 
@@ -14,7 +16,7 @@ export interface PostFormValues {
   title: string;
   animeName: string;
   region: string;
-  reports: Report[];
+  reports: ReportTypes[];
 }
 
 const Page = () => {
@@ -22,6 +24,8 @@ const Page = () => {
     register,
     handleSubmit,
     setValue,
+    clearErrors,
+    resetField,
     formState: { errors },
     watch,
   } = useForm<PostFormValues>({
@@ -34,7 +38,9 @@ const Page = () => {
           id: 1,
           images: [],
           inputValue: "",
-          place: "",
+          prefecture: "",
+          city: "",
+          overseasRegion: "",
           previewUrls: [],
         },
       ],
@@ -49,7 +55,9 @@ const Page = () => {
       id: Date.now(),
       images: [],
       inputValue: "",
-      place: "",
+      prefecture: "",
+      city: "",
+      overseasRegion: "",
       previewUrls: [],
     };
     setValue("reports", [...reports, newReport]);
@@ -57,6 +65,7 @@ const Page = () => {
 
   // レポート削除
   const handleDeleteReport = (index: number) => {
+    alert(`このレポート${index + 1}を削除しました`);
     setValue(
       "reports",
       reports.filter((_, i) => i !== index)
@@ -99,6 +108,8 @@ const Page = () => {
               register={register}
               errors={errors}
               reportData={report}
+              clearErrors={clearErrors}
+              resetField={resetField}
             />
           ))}
         </div>
@@ -120,7 +131,7 @@ const Page = () => {
             type="submit"
             className="bg-blue-500 text-white py-2 px-4 rounded mt-4 cursor-pointer"
           >
-            フォームを送信
+            公開する
           </button>
         </div>
       </form>

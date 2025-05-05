@@ -1,8 +1,14 @@
 "use client";
 import { Input, TextArea, UploadImage } from "../common";
-import { FieldErrors, UseFormRegister } from "react-hook-form";
-import { PostFormValues } from "@/post/page";
+import {
+  FieldErrors,
+  UseFormClearErrors,
+  UseFormRegister,
+  UseFormResetField,
+} from "react-hook-form";
+import { PostFormValues, ReportTypes } from "@/post/page";
 import { FaRegTrashCan } from "react-icons/fa6";
+import { RegionInput } from "./RegionInput";
 
 interface ReportData {
   images: File[];
@@ -15,6 +21,8 @@ export const Report = ({
   index,
   onDelete,
   register,
+  resetField,
+  clearErrors,
   errors,
   onImageChange,
   reportData,
@@ -22,9 +30,11 @@ export const Report = ({
   index: number;
   onDelete: (index: number) => void;
   register: UseFormRegister<PostFormValues>;
+  resetField: UseFormResetField<PostFormValues>;
+  clearErrors: UseFormClearErrors<PostFormValues>;
   errors: FieldErrors<PostFormValues>;
   onImageChange: (index: number, files: File[]) => void;
-  reportData: ReportData;
+  reportData: ReportTypes;
 }) => {
   return (
     <div className="p-4 mb-4 bg-white rounded border">
@@ -43,18 +53,13 @@ export const Report = ({
       />
 
       {/* 聖地の場所 */}
-      <div className="mt-8">
-        <Input
-          id={`reports.${index}.place`}
-          text="聖地の場所"
-          name={`reports.${index}.place`}
-          register={register}
-          validation={{
-            required: "聖地の場所を入力してください",
-          }}
-          error={errors.reports?.[index]?.place?.message}
-        />
-      </div>
+      <RegionInput
+        register={register}
+        error={errors}
+        index={index}
+        resetField={resetField}
+        clearErrors={clearErrors}
+      />
 
       {/* レポート内容 */}
       <div className="mt-8">
@@ -66,6 +71,7 @@ export const Report = ({
           }}
           error={errors.reports?.[index]?.inputValue?.message}
           text="説明"
+          placeholder="この聖地はどうだった？"
         />
       </div>
 

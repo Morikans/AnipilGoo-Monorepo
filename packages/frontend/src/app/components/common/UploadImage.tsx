@@ -1,4 +1,3 @@
-"use client";
 import { FieldValues, Path, UseFormRegister } from "react-hook-form";
 import { HiOutlineXMark } from "react-icons/hi2";
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
@@ -55,6 +54,7 @@ export const UploadImage = <T extends FieldValues>({
             type="file"
             multiple
             className="hidden"
+            accept=".png, .jpg, .jpeg"
             {...register(name, {
               onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
                 handleFileChange(e);
