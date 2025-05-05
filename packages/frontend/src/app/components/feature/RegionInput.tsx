@@ -54,7 +54,7 @@ export const RegionInput = ({
         </div>
       ) : (
         <div className="mt-8">
-          <label htmlFor="JPRegion">
+          <label htmlFor={`JPRegion-${index}`}>
             <div className="flex gap-2 items-center">
               <p className="font-bold">聖地の場所</p>
               {error && (
@@ -65,7 +65,7 @@ export const RegionInput = ({
             </div>
             <div className="flex gap-2">
               <select
-                id=""
+                id={`JPRegion-${index}`}
                 {...register(`reports.${index}.prefecture`, {
                   required: "都道府県は必須です",
                 })}

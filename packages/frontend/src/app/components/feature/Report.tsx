@@ -76,15 +76,17 @@ export const Report = ({
       </div>
 
       {/* 削除ボタン */}
-      <div className="text-right">
-        <button
-          type="button"
-          onClick={() => onDelete(index)}
-          className="mt-8 cursor-pointer"
-        >
-          <FaRegTrashCan size={24} />
-        </button>
-      </div>
+      {index > 0 && (
+        <div className="text-right">
+          <button
+            type="button"
+            onClick={() => onDelete(index)}
+            className="mt-8 cursor-pointer"
+          >
+            <FaRegTrashCan size={24} />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

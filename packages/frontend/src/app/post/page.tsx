@@ -115,15 +115,17 @@ const Page = () => {
         </div>
 
         {/* レポート追加ボタン */}
-        <div>
-          <button
-            type="button"
-            onClick={handleAddReport}
-            className="w-full border py-1 rounded mt-4 cursor-pointer text-4xl"
-          >
-            +
-          </button>
-        </div>
+        {reports.length < 10 && (
+          <div>
+            <button
+              type="button"
+              onClick={handleAddReport}
+              className="w-full border py-1 rounded mt-4 cursor-pointer text-4xl"
+            >
+              +
+            </button>
+          </div>
+        )}
 
         {/* フォーム送信ボタン */}
         <div className="text-right">
