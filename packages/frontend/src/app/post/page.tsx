@@ -1,6 +1,6 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { Thumbnail, Report } from "@/components";
+import { Thumbnail, Report, Input } from "@/components";
 
 export interface ReportTypes {
   id: number;
@@ -95,7 +95,18 @@ const Page = () => {
   return (
     <div className="p-4">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Thumbnail register={register} error={errors} setValue={setValue} />
+        <Input
+          id={"title"}
+          text="タイトル"
+          name={"title"}
+          register={register}
+          placeholder="タイトルを入力"
+          validation={{ required: "タイトルを入力してください" }}
+          error={errors?.title?.message}
+        />
+        <div className="mt-8">
+          <Thumbnail register={register} error={errors} setValue={setValue} />
+        </div>
 
         {/* レポート一覧 */}
         <div className="mt-8">
