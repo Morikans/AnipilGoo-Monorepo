@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useState } from "react";
 import { UseFormRegister, FieldValues, Path } from "react-hook-form";
 import { PiEyeSlashFill } from "react-icons/pi";
@@ -42,7 +42,7 @@ export const Input = <T extends FieldValues>({
           <input
             id={id}
             type={isVisible ? type : "text"}
-            className="w-full rounded-sm border border-gray-300 p-1 focus:outline-none transition duration-15 focus:bg-orange-50 focus:ring-2 focus:ring-orange-500/60"
+            className="bg-white w-full rounded-sm border border-gray-300 p-1 focus:outline-none transition duration-15 focus:bg-orange-50 focus:ring-2 focus:ring-orange-500/60"
             placeholder={placeholder}
             {...register(name, validation)}
           />
